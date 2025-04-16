@@ -1,6 +1,6 @@
 
 const sheetUrl =
-  "https://spreadsheets.google.com/feeds/list/2PACX-1vSw1hhJh82F5-My06wgU7rkabJOJ_JvnKuJpnrUy7hXguNqBgNlWF3WAL-YbBhNLBQX1Mw4QMMeYdn-/od6/public/values?alt=json";
+  "const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSw1hhJh82F5-My06wgU7rkabJOJ_JvnKuJpnrUy7hXguNqBgNlWF3WAL-YbBhNLBQX1Mw4QMMeYdn-/pub?gid=0&single=true&output=csv";
 
 fetch(sheetUrl)
   .then((res) => res.json())
