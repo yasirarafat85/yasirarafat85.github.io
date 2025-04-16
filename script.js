@@ -1,33 +1,34 @@
+// Google Sheet CSV URL
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSw1hhJh82F5-My06wgU7rkabJOJ_JvnKuJpnrUy7hXguNqBgNlWF3WAL-YbBhNLBQX1Mw4QMMeYdn-/pub?output=csv';
 
-const sheetUrl =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSw1hhJh82F5-My06wgU7rkabJOJ_JvnKuJpnrUy7hXguNqBgNlWF3WAL-YbBhNLBQX1Mw4QMMeYdn-/pub?output=csv";
+fetch(csvUrl)
+  .then(response => response.text())
+  .then(data => {
+    // Split data by new line and then by comma
+    const rows = data.trim().split("\n").map(row => row.split(","));
+    const tableHead = document.querySelector("#sheet-table thead");
+    const tableBody = document.querySelector("#sheet-table tbody");
 
-fetch(sheetUrl)
-  .then((res) => res.json())
-  .then((data) => {
-    const entries = data.feed.entry;
-    const tableBody = document.getElementById("tableBody");
-    const tableHeader = document.getElementById("tableHeader");
-
-    const keys = Object.keys(entries[0])
-      .filter((key) => key.startsWith("gsx$"))
-      .map((key) => key.replace("gsx$", ""));
-
-    keys.forEach((key) => {
+    // Add table header row
+    const headerRow = document.createElement("tr");
+    rows[0].forEach(cell => {
       const th = document.createElement("th");
-      th.textContent = key.toUpperCase();
-      tableHeader.appendChild(th);
+      th.textContent = cell;
+      headerRow.appendChild(th);
     });
+    tableHead.appendChild(headerRow);
 
-    entries.forEach((row) => {
+    // Add table data rows
+    for (let i = 1; i < rows.length; i++) {
       const tr = document.createElement("tr");
-      keys.forEach((key) => {
+      rows[i].forEach(cell => {
         const td = document.createElement("td");
-        td.textContent = row["gsx$" + key]["$t"];
+        td.textContent = cell;
         tr.appendChild(td);
       });
       tableBody.appendChild(tr);
-    });
-
-    $('#sheetTable').DataTable();
+    }
+  })
+  .catch(error => {
+    console.error('Error loading CSV:', error);
   });
