@@ -1,23 +1,5 @@
-body {
-  padding: 30px;
-  background: linear-gradient(135deg, #74ABE2, #5563DE);
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+table.dataTable td {
+  white-space: normal !important;
+  word-wrap: break-word;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px #000;
-}
-
-.table-responsive {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 5px;
-}
-
-table.table {
-  color: #333;
-}
