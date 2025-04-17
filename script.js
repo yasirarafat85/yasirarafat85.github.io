@@ -6,7 +6,7 @@ $('#sheet-table').DataTable({
     'csvHtml5',
     {
       extend: 'pdfHtml5',
-      orientation: 'landscape', // 👉横 (landscape) মোড
+      orientation: 'landscape', // 👉(landscape) মোড
       pageSize: 'A3',            // 👉 বড় পেজ সাইজ
       exportOptions: {
         columns: ':visible'      // 👉 সব কলাম থাকবে
