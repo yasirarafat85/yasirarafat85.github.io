@@ -1,46 +1,35 @@
-// Google Sheet CSV URL (আপনার CSV লিংক)
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSw1hhJh82F5-My06wgU7rkabJOJ_JvnKuJpnrUy7hXguNqBgNlWF3WAL-YbBhNLBQX1Mw4QMMeYdn-/pub?output=csv';
-
-fetch(csvUrl)
-  .then(response => response.text())
-  .then(data => {
-    // CSV ডেটাকে লাইনে ভাঙ্গা
-    const rows = data.trim().split('\n').map(row => row.split(','));
-    const tableHead = document.querySelector("#sheet-table thead");
-    const tableBody = document.querySelector("#sheet-table tbody");
-
-    // প্রথম লাইনে হেডার রো হিসেবে যোগ করা হবে
-    const headerRow = document.createElement('tr');
-    rows[0].forEach(cell => {
-      const th = document.createElement('th');
-      th.textContent = cell;
-      headerRow.appendChild(th);
-    });
-    tableHead.appendChild(headerRow);
-
-    // বাকি লাইনগুলো ডেটা হিসেবে যোগ করা হবে
-    for (let i = 1; i < rows.length; i++) {
-      const tr = document.createElement('tr');
-      rows[i].forEach(cell => {
-        const td = document.createElement('td');
-        td.textContent = cell;
-        tr.appendChild(td);
-      });
-      tableBody.appendChild(tr);
+$('#sheet-table').DataTable({
+  dom: 'Bfrtip',
+  buttons: [
+    'copyHtml5',
+    'excelHtml5',
+    'csvHtml5',
+    {
+      extend: 'pdfHtml5',
+      orientation: 'landscape', // 👉横 (landscape) মোড
+      pageSize: 'A3',            // 👉 বড় পেজ সাইজ
+      exportOptions: {
+        columns: ':visible'      // 👉 সব কলাম থাকবে
+      },
+      customize: function(doc) {
+        doc.styles.tableHeader.fontSize = 10;
+        doc.defaultStyle.fontSize = 9;
+        doc.content[1].table.widths = 
+          Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+      }
+    },
+    {
+      extend: 'print',
+      title: 'Live Google Sheet Data',
+      customize: function (win) {
+        $(win.document.body).css('font-size', '10pt').prepend(
+          '<h3>Live Data Report</h3>'
+        );
+        $(win.document.body).find('table')
+          .addClass('compact')
+          .css('font-size', 'inherit')
+          .css('width', '100%');
+      }
     }
-
-    // DataTable initialize করা হচ্ছে, যাতে সার্চ, প্রিন্ট, ডাউনলোডের বাটন থাকে
-    $('#sheet-table').DataTable({
-      dom: 'Bfrtip',   // Button, filter, table, pagination
-      buttons: [
-        'copyHtml5',
-        'excelHtml5',
-        'csvHtml5',
-        'pdfHtml5',
-        'print'
-      ]
-    });
-  })
-  .catch(error => {
-    console.error('CSV লোড করতে সমস্যা:', error);
-  });
+  ]
+});
